@@ -9,7 +9,7 @@ const bot = new Telegraf(env.token);
 const menuPrincipal = ['Entradas e Acompanhamentos', 'Pratos Principais', 
     'Bebidas e Sobremesas', 'Sabores Diversos', 'Receitas mais Saudáveis'];
 
-//Botões Menu Principal
+//Função gerar botões do menu principal
 const gerarBotoes = () => Extra.markup(
     Markup.inlineKeyboard(
         menuPrincipal.map((value, index) => Markup.callbackButton(value, `op ${index}`)),
@@ -21,10 +21,10 @@ const gerarBotoes = () => Extra.markup(
 bot.start(async ctx => {
     const name = ctx.update.message.from.first_name;
     await ctx.reply(`Olá, ${name}, seja bem vindo(a)!`);
-    await ctx.reply('Quer uma ideia para cozinhar?😋\n\nEscolha uma categoria de receita:\n', gerarBotoes());
+    await ctx.reply('Quer uma ideia para cozinhar? 😋\n\nEscolha uma categoria de receita:\n', gerarBotoes());
 });
 
-//Subcategorias de receitas
+//Subcategorias de receitas - paginação do site
 const op1 = ['sopas-e-saladas', 'molhos-e-acompanhamentos', 'padaria'];
 const op2 = ['aves', 'carnes', 'massas-variadas', 'peixes-e-frutos-do-mar'];
 const op3 = ['aniversario-carrefour', 'padaria', 'bolos-e-doces', 'drinks-coqueteis-e-bebidas'];
@@ -32,9 +32,9 @@ const op4 = ['tempero-e-arte', 'chefs-convidados', 'prato-unico', 'petiscos-para
 const op5 = ['receitas-verao', 'receitas-saudaveis', 'natal', 'receitas-para-criancas', 'menu-sustentavel', 'macarrao-saudavel'];
 const opcoes = [...op1, ...op2, ...op3, ...op4, ...op5];
 
-//Criação dos botões de cada item do menu principal
 const urlChefCarrefour = 'https://www.carrefour.com.br/dicas/chef-carrefour/';
 
+//Criação dos botões de cada item do menu principal
 const sub1 = Extra.markup(Markup.inlineKeyboard([
     Markup.callbackButton('Sopas e Saladas', 'e1'),
     Markup.callbackButton('Molhos e Acompanhamentos', 'e2'),
@@ -85,7 +85,7 @@ for (let i = 0; i < submenus.length; i++) {
 //Opção de encerramento
 const tecladoEncerramento = Markup.keyboard(['Sim', 'Não']).resize().extra();
 
-//Redirecionamento para o site da categoria escolhida
+//Redirecionamento para o site da categoria escolhida e opção de encerramento
 bot.action(/e(\d+)/, async ctx => {
         await ctx.reply(`${urlChefCarrefour}${opcoes[ctx.match[1]-1]}`);
         await ctx.reply('Deseja terminar? ', tecladoEncerramento);
@@ -100,3 +100,4 @@ bot.hears('Não', async ctx => {
 });
 
 bot.startPolling();
+
